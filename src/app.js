@@ -8,6 +8,7 @@ app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({ extend: true}));
 
 const accountData = fs.readFileSync(path.join(__dirname, 'json/accounts.json'), { encoding: 'UTF8'});
 const accounts = JSON.parse(accountData);
@@ -29,6 +30,26 @@ app.get('/credit', function(req, res){
 });
 app.get('/profile', function(req, res){
   res.render('profile', {user: users[0]});
+});
+app.get('/transfer', function(req, res){
+  res.render('transfer');
+});
+app.post('/transfer', function(req, res){
+  accounts[req.body.from].balance -= parseInt(req.body.amount);
+  accounts[req.body.to].balance += parseInt(req.body.amount);
+  var accountsJSON = JSON.stringify(accounts);
+  fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'UTF8');
+  res.render('transfer', { message: "Transfer Completed" });
+});
+app.get('/payment', function(req, res){
+  res.render('payment', {account: accounts.credit});
+});
+app.post('/payment', function(req, res){
+  accounts.credit.balance -= parseInt(req.body.amount);
+  accounts.credit.available += parseInt(req.body.amount);
+  var accountsJSON = JSON.stringify(accounts);
+  fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'UTF8');
+  res.render('payment', { message: "Payment Successful", account: accounts.credit });
 });
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
