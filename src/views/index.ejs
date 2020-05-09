@@ -4,4 +4,7 @@
   <a href="/profile">Profile</a>
   <a href="/transfer">Transfer</a>
 </div>
+<%- include('summary', {account: account.savings}); %>
+<%- include('summary', {account: account.checking}); %>
+<%- include('summary', {account: account.credit}); %>
 <%- include('footer'); %>
