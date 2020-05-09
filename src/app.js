@@ -28,7 +28,7 @@ app.get('/credit', function(req, res){
   res.render('account', {account: accounts.credit});
 });
 app.get('/profile', function(req, res){
-  res.render('profile', {user: user[0]});
+  res.render('profile', {user: users[0]});
 });
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
